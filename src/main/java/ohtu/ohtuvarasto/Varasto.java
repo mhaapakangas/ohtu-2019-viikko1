@@ -2,39 +2,37 @@ package ohtu.ohtuvarasto;
 
 public class Varasto {
 
-    // --- piilotettu tietorakenteen toteutus: ---
-    private double tilavuus;  // paljonko varastoon mahtuu,  > 0
-    private double saldo;     // paljonko varastossa on nyt, >= 0
+    private double tilavuus;
+    private double saldo;
 
-    // --- konstruktorit: ---
-    public Varasto(double tilavuus) {  // tilavuus on annettava
-        if (tilavuus > 0.0) {
-            this.tilavuus = tilavuus;
-        } else // virheellinen, nollataan
-        {
-            this.tilavuus = 0.0;  // => käyttökelvoton varasto
-        }
-        saldo = 0;     // oletus: varasto on tyhjä
+    public Varasto(double tilavuus) {
+        asetaTilavuus(tilavuus);
+        saldo = 0;
     }
 
-    public Varasto(double tilavuus, double alkuSaldo) { // kuormitetaan
+    public Varasto(double tilavuus, double alkuSaldo) {
+        asetaTilavuus(tilavuus);
+        asetaSaldo(tilavuus, alkuSaldo);
+    }
+
+    private void asetaTilavuus(double tilavuus) {
         if (tilavuus > 0.0) {
             this.tilavuus = tilavuus;
-        } else // virheellinen, nollataan
-        {
-            this.tilavuus = 0.0;  // => käyttökelvoton varasto
+        } else {
+            this.tilavuus = 0.0;
         }
+    }
+
+    private void asetaSaldo(double tilavuus, double alkuSaldo) {
         if (alkuSaldo < 0.0) {
             this.saldo = 0.0;
-        } else if (alkuSaldo <= tilavuus) // mahtuu
-        {
+        } else if (alkuSaldo <= tilavuus) {
             this.saldo = alkuSaldo;
         } else {
-            this.saldo = tilavuus;  // täyteen ja ylimäärä hukkaan!
+            this.saldo = tilavuus;
         }
     }
 
-    // --- ottavat aksessorit eli getterit: ---
     public double getSaldo() {
         return saldo;
     }
@@ -43,40 +41,35 @@ public class Varasto {
         return tilavuus;
     }
 
-    public double paljonkoMahtuu() {  // huom: ominaisuus voidaan myös laskea
-        return tilavuus - saldo;        //  ei tarvita erillistä kenttää vielaTilaa tms.
+    public double paljonkoMahtuu() {
+        return tilavuus - saldo;
     }
 
-    // --- asettavat aksessorit eli setterit: ---
     public void lisaaVarastoon(double maara) {
-        if (maara < 0) // virhetilanteessa voidaan tehdä 
-        {
-            return;       // tällainen pikapoistuminenkin!
+        if (maara < 0) {
+            return;
         }
-        if (maara <= paljonkoMahtuu()) // omia aksessoreita voi kutsua
-        {
-            saldo = saldo + maara;          // ihan suoraan sellaisinaan
+        if (maara <= paljonkoMahtuu()) {
+            saldo = saldo + maara;
         } else {
-            saldo = tilavuus;  // täyteen ja ylimäärä hukkaan!
+            saldo = tilavuus;
         }
     }
 
     public double otaVarastosta(double maara) {
-        if (maara < 0) // virhetilanteessa voidaan tehdä 
-        {
-            return 0.0;   // tällainen pikapoistuminenkin!
+        if (maara < 0) {
+            return 0.0;
         }
-        if (maara > saldo) {          // annetaan mitä voidaan
+        if (maara > saldo) {
             double kaikkiMitaVoidaan = saldo;
-            saldo = 0.0;               // ja tyhjäksi menee
-            return kaikkiMitaVoidaan;  // poistutaan saman tien
+            saldo = 0.0;
+            return kaikkiMitaVoidaan;
         }
-        // jos tänne päästään, kaikki pyydetty voidaan antaa
-        saldo = saldo - maara;  // vähennetään annettava saldosta
+
+        saldo = saldo - maara;
         return maara;
     }
 
-    // --- Merkkijonoesitys Varasto-oliolle: ----
     public String toString() {
         return ("saldo = " + saldo + ", vielä tilaa " + paljonkoMahtuu());
     }
