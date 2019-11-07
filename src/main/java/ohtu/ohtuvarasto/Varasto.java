@@ -11,7 +11,7 @@ public class Varasto {
     }
 
     public Varasto(double tilavuus, double alkuSaldo) {
-        asetaTilavuus(tilavuus);
+           asetaTilavuus(tilavuus);
         asetaSaldo(tilavuus, alkuSaldo);
     }
 
